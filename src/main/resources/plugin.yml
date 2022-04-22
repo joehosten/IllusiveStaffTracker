@@ -1,0 +1,8 @@
+name: IllusiveStafftTracker
+version: '${project.version}'
+main: me.joehosten.illusivestafftracker.IllusiveStaffTracker
+api-version: 1.18
+prefix: IllusiveStaffTracker
+authors: [ "Joseph Hosten (hypews)" ]
+description: "This is the intellectual property of Joseph Hosten (hypews)"
+website: https://www.joehosten.me
