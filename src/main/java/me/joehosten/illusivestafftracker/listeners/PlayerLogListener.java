@@ -11,26 +11,44 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.awt.*;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.UUID;
 
 public class PlayerLogListener implements Listener {
 
-    public HashMap<UUID, Long> map = new HashMap<>();
+    private final IllusiveStaffTracker plugin;
+    private final HashMap<UUID, Long> map;
+
+    public PlayerLogListener(IllusiveStaffTracker plugin) {
+        this.plugin = plugin;
+        this.map = plugin.getMap();
+    }
+
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         if (!p.hasPermission("illusive.staff")) return;
-        clockIn(p);
-
-        System.out.println(map);
+        clockIn(p.getUniqueId());
     }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         if (!p.hasPermission("illusive.staff")) return;
+        clockOut(p);
+    }
+
+    private Long getTimeFromConfig(UUID p) {
+        FileConfiguration config = IllusiveStaffTracker.getInstance().getConfig();
+        return config.getLong(String.valueOf(p));
+    }
+
+    private void clockIn(UUID p) {
+        map.put(p, System.currentTimeMillis());
+        System.out.print("clocked in " + p);
+    }
+
+    private void clockOut(Player p) {
         long logoutTime = System.currentTimeMillis();
         long loginTime = map.get(p.getUniqueId());
         map.remove(p.getUniqueId());
@@ -42,12 +60,7 @@ public class PlayerLogListener implements Listener {
         config.set(String.valueOf(p.getUniqueId()), toSet);
         IllusiveStaffTracker.getInstance().saveConfig();
 
-        IllusiveStaffTracker.getInstance().sendEmbed(p, p.getName() + " logged off with " + convertTime(toSet) + " played this week.", false, Color.GRAY);
-    }
-
-    private Long getTimeFromConfig(UUID p) {
-        FileConfiguration config = IllusiveStaffTracker.getInstance().getConfig();
-        return config.getLong(String.valueOf(p));
+        IllusiveStaffTracker.getInstance().sendEmbed(p, p.getName() + " logged off with " + plugin.convertTime(toSet) + " played this week.", false, Color.GRAY);
     }
 
     public void saveAllPlayers() {
@@ -60,22 +73,9 @@ public class PlayerLogListener implements Listener {
             config.set(String.valueOf(p), (logoutTime - loginTime) + getTimeFromConfig(p));
             IllusiveStaffTracker.getInstance().saveConfig();
             if (Bukkit.getPlayer(p) != null) { // check if player is online
-                clockIn(Objects.requireNonNull(Bukkit.getPlayer(p)));
+                clockIn(p);
             }
         }
         System.out.println("saved playrs");
-    }
-
-    private String convertTime(Long ms) {
-        long minutes = (ms / 1000) / 60;
-        long seconds = (ms / 1000) % 60;
-
-        return minutes + " minutes and "
-                + seconds + " seconds";
-
-    }
-
-    private void clockIn(Player p) {
-        map.put(p.getUniqueId(), System.currentTimeMillis());
     }
 }
