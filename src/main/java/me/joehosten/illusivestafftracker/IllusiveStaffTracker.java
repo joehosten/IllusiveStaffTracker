@@ -7,13 +7,12 @@ import lombok.SneakyThrows;
 import me.joehosten.illusivestafftracker.commands.CommandCheck;
 import me.joehosten.illusivestafftracker.commands.discord.DiscordCommandCheckLegacy;
 import me.joehosten.illusivestafftracker.commands.discord.DiscordCommandHelp;
-import me.joehosten.illusivestafftracker.listeners.DailySummaryTask;
-import me.joehosten.illusivestafftracker.listeners.DateCheckRunnable;
-import me.joehosten.illusivestafftracker.listeners.PlayerLogListener;
-import me.joehosten.illusivestafftracker.listeners.PlayerSaveTask;
+import me.joehosten.illusivestafftracker.listeners.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -21,6 +20,7 @@ import org.bukkit.OfflinePlayer;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public final class IllusiveStaffTracker extends BasePlugin {
@@ -56,7 +56,7 @@ public final class IllusiveStaffTracker extends BasePlugin {
         JDA jda = JDABuilder.createDefault(botToken).build().awaitReady();
 
         textChannel = jda.getTextChannelById(textChannelId);
-        jda.addEventListener(new DiscordCommandCheckLegacy(), new DiscordCommandHelp());
+        jda.addEventListener(new DiscordCommandCheckLegacy(), new DiscordCommandHelp(), new DiscordBotPingEvent());
 //        registerDevCommands();
 
         sendEmbed(Bukkit.getOfflinePlayer("hypews"), "Bot online", true, Color.RED);
@@ -94,5 +94,12 @@ public final class IllusiveStaffTracker extends BasePlugin {
 
     }
 
+    public Role checkMemberRoles(Member member, String name) {
+        List<Role> roles = member.getRoles();
+        return roles.stream()
+                .filter(role -> role.getName().equals(name)) // filter by role name
+                .findFirst() // take first result
+                .orElse(null); // else return null
+    }
 
 }
