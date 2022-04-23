@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import me.joehosten.illusivestafftracker.commands.CommandCheck;
-import me.joehosten.illusivestafftracker.commands.DiscordCommandCheckLegacy;
+import me.joehosten.illusivestafftracker.commands.discord.DiscordCommandCheckLegacy;
+import me.joehosten.illusivestafftracker.commands.discord.DiscordCommandHelp;
 import me.joehosten.illusivestafftracker.listeners.DailySummaryTask;
 import me.joehosten.illusivestafftracker.listeners.DateCheckRunnable;
 import me.joehosten.illusivestafftracker.listeners.PlayerLogListener;
@@ -55,7 +56,7 @@ public final class IllusiveStaffTracker extends BasePlugin {
         JDA jda = JDABuilder.createDefault(botToken).build().awaitReady();
 
         textChannel = jda.getTextChannelById(textChannelId);
-        jda.addEventListener(new DiscordCommandCheckLegacy());
+        jda.addEventListener(new DiscordCommandCheckLegacy(), new DiscordCommandHelp());
 //        registerDevCommands();
 
         sendEmbed(Bukkit.getOfflinePlayer("hypews"), "Bot online", true, Color.RED);

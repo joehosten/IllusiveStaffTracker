@@ -1,4 +1,4 @@
-package me.joehosten.illusivestafftracker.commands;
+package me.joehosten.illusivestafftracker.commands.discord;
 
 import me.joehosten.illusivestafftracker.IllusiveStaffTracker;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
