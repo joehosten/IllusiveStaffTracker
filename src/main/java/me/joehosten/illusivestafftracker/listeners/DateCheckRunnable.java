@@ -27,13 +27,11 @@ public class DateCheckRunnable extends BukkitRunnable {
         Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
         calendar.setTime(date);   // assigns calendar to given date
 
-        if (date.getDay() == 1 && calendar.get(Calendar.HOUR_OF_DAY) == 22) {
+        if (date.getDay() == 0 && calendar.get(Calendar.HOUR_OF_DAY) == 22) {
             for (String key : IllusiveStaffTracker.getInstance().getConfig().getKeys(false)) {
                 IllusiveStaffTracker.getInstance().getConfig().set(key, null);
             }
             IllusiveStaffTracker.getInstance().saveConfig();
-
-
         }
     }
 

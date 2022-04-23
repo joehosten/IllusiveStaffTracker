@@ -6,6 +6,7 @@ import lombok.Setter;
 import me.joehosten.illusivestafftracker.commands.CommandCheck;
 import me.joehosten.illusivestafftracker.listeners.DateCheckRunnable;
 import me.joehosten.illusivestafftracker.listeners.PlayerLogListener;
+import me.joehosten.illusivestafftracker.listeners.PlayerSaveTask;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -15,6 +16,9 @@ import org.bukkit.OfflinePlayer;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 
 public final class IllusiveStaffTracker extends BasePlugin {
 
@@ -22,7 +26,6 @@ public final class IllusiveStaffTracker extends BasePlugin {
     @Setter
     private static IllusiveStaffTracker instance;
 
-    private JDA jda;
     @Getter
     @Setter
     private TextChannel textChannel;
@@ -38,10 +41,12 @@ public final class IllusiveStaffTracker extends BasePlugin {
         registerCommands(new CommandCheck());
 
         new DateCheckRunnable().runTaskTimerAsynchronously(this, 0L, 3600L * 20L);
+        new PlayerSaveTask().runTaskTimerAsynchronously(this, 0L, 600L * 20L);
 
         // Discord
         String botToken = "NzAyNjc3NDI2ODE5NDMyNDc5.XqDhWQ.wwE5WFgJAK-6z5Gd8mlKiWLzFCo";
         String textChannelId = "965844461772996628";
+        JDA jda;
         try {
             jda = JDABuilder.createDefault(botToken).build().awaitReady();
         } catch (InterruptedException | LoginException e) {
@@ -68,6 +73,8 @@ public final class IllusiveStaffTracker extends BasePlugin {
         if (!contentAuthorLine) {
             builder.setDescription(content);
         }
+        LocalDate ld = LocalDate.now();
+        builder.setFooter(ld.getDayOfMonth() + "/" + ld.getMonthValue() + "/" + ld.getYear() + " (day/month/year)");
 
         textChannel.sendMessageEmbeds(builder.build()).queue();
     }
