@@ -50,7 +50,7 @@ public final class IllusiveStaffTracker extends BasePlugin {
         new DailySummaryTask(this).runTaskTimerAsynchronously(this, 0L, 86400L * 20L);
 
         // Discord
-        String botToken = "NzAyNjc3NDI2ODE5NDMyNDc5.XqDhWQ.wwE5WFgJAK-6z5Gd8mlKiWLzFCo";
+        String botToken = "[redacted]";
         String textChannelId = "965844461772996628";
 //        new SlashCommandListener();
         JDA jda = JDABuilder.createDefault(botToken).build().awaitReady();
