@@ -1,0 +1,8 @@
+database:
+  database:
+  username:
+  password:
+  port:
+  host:
+bot:
+  token:

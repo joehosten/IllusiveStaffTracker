@@ -1,4 +1,4 @@
-package me.joehosten.illusivestafftracker.core;
+package me.joehosten.illusivestafftracker.core.util;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
