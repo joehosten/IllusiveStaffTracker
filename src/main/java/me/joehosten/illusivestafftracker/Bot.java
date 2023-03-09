@@ -30,7 +30,7 @@ public class Bot extends DiscordBot {
         jda = builder.build().awaitReady();
         registerGlobalCommand(new DiscordCommandCheck());
         registerGlobalCommand(new DiscordSelfCheck());
-//        registerGlobalCommand(new DiscordTestCommand());
+        registerGlobalCommand(new DiscordTestCommand());
         initializeCommands(jda);
     }
 

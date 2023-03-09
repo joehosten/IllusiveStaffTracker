@@ -62,7 +62,7 @@ public class PlayerLogListener implements Listener {
         eb.setDescription(mention.getAsMention() + " clocked in at " + TimeUtil.timeNow() + reason);
         eb.setThumbnail("https://crafatar.com/avatars/" + p + "?overlay=1");
         eb.setColor(Color.green);
-        TextChannel tc = Bot.getBot().getJda().getTextChannelById("1014041763037581342");
+        TextChannel tc = Bot.getBot().getJda().getTextChannelById("1083078866505060363");
         Objects.requireNonNull(tc).sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -105,7 +105,7 @@ public class PlayerLogListener implements Listener {
         User mention = DiscordSrvUtils.getUser(p.getUniqueId());
         String reason = !afk ? "" : " due to being AFK.";
         eb.setDescription(mention.getAsMention() + " clocked out at " + TimeUtil.timeNow() + reason);
-        TextChannel tc = Bot.getBot().getJda().getTextChannelById("1014041763037581342");
+        TextChannel tc = Bot.getBot().getJda().getTextChannelById("1083078866505060363");
         Objects.requireNonNull(tc).sendMessageEmbeds(eb.build()).queue();
     }
 

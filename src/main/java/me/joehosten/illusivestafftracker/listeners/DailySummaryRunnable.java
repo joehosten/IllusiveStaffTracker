@@ -1,8 +1,6 @@
-package me.joehosten.illusivestafftracker.commands;
+package me.joehosten.illusivestafftracker.listeners;
 
 import games.negative.framework.db.SQLDatabase;
-import games.negative.framework.discord.command.SlashCommand;
-import games.negative.framework.discord.command.SlashInfo;
 import me.joehosten.illusivestafftracker.Bot;
 import me.joehosten.illusivestafftracker.IllusiveStaffTracker;
 import me.joehosten.illusivestafftracker.core.util.DbUtils;
@@ -10,7 +8,7 @@ import me.joehosten.illusivestafftracker.core.util.DiscordSrvUtils;
 import me.joehosten.illusivestafftracker.core.util.TimeUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -20,11 +18,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
-@SlashInfo(name = "test", description = "test")
-public class DiscordTestCommand extends SlashCommand {
+public class DailySummaryRunnable extends BukkitRunnable {
     @Override
-    public void onCommand(SlashCommandInteractionEvent slashCommandInteractionEvent) {
-        if (!slashCommandInteractionEvent.getUser().getId().equals("462296411141177364")) return;
+    public void run() {
         LocalDateTime now = LocalDateTime.now();
 
         if (now.getHour() == 11) {

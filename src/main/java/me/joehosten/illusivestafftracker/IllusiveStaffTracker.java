@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import me.joehosten.illusivestafftracker.core.util.ConfigUtils;
+import me.joehosten.illusivestafftracker.listeners.DailySummaryRunnable;
 import me.joehosten.illusivestafftracker.listeners.DateCheckRunnable;
 import me.joehosten.illusivestafftracker.listeners.PlayerAfkChangeListener;
 import me.joehosten.illusivestafftracker.listeners.PlayerLogListener;
@@ -53,6 +54,7 @@ public final class IllusiveStaffTracker extends BasePlugin {
 
 
         new DateCheckRunnable().runTaskTimerAsynchronously(this, 0L, 3600L * 20L);
+        new DailySummaryRunnable().runTaskTimerAsynchronously(this, 0L, 86400L * 20L);
 
     }
 
@@ -60,6 +62,7 @@ public final class IllusiveStaffTracker extends BasePlugin {
     public void onDisable() {
         new PlayerLogListener(this, db).saveAllPlayers();
         new DateCheckRunnable().cancel();
+        new DailySummaryRunnable().cancel();
         Bot.getBot().getJda().shutdown();
         try {
             db.close();

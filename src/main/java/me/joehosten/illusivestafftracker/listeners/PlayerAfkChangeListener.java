@@ -39,10 +39,9 @@ public class PlayerAfkChangeListener implements Listener {
             }.runTaskLaterAsynchronously(IllusiveStaffTracker.getInstance(), 600L * 20L);
             System.out.println("player afk, putting map");
         } else {
-            if (map.containsKey(p.getUniqueId())) {
-                putIntoData(p.getUniqueId().toString(), map.get(p.getUniqueId()));
-                map.remove(p.getUniqueId());
-            }
+            putIntoData(p.getUniqueId().toString(), map.get(p.getUniqueId()));
+            map.remove(p.getUniqueId());
+
             System.out.println("player no longer afk, removing map and putting sql");
         }
 
