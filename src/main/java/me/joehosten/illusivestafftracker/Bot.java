@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import me.joehosten.illusivestafftracker.commands.DiscordCommandCheck;
+import me.joehosten.illusivestafftracker.commands.DiscordSelfCheck;
+import me.joehosten.illusivestafftracker.commands.DiscordTestCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -27,6 +29,8 @@ public class Bot extends DiscordBot {
         JDABuilder builder = create(botToken, List.of(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_PRESENCES));
         jda = builder.build().awaitReady();
         registerGlobalCommand(new DiscordCommandCheck());
+        registerGlobalCommand(new DiscordSelfCheck());
+//        registerGlobalCommand(new DiscordTestCommand());
         initializeCommands(jda);
     }
 

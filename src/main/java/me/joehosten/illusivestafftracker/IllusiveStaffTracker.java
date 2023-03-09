@@ -12,10 +12,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import me.joehosten.illusivestafftracker.core.util.ConfigUtils;
-import me.joehosten.illusivestafftracker.listeners.DailySummaryTask;
 import me.joehosten.illusivestafftracker.listeners.DateCheckRunnable;
+import me.joehosten.illusivestafftracker.listeners.PlayerAfkChangeListener;
 import me.joehosten.illusivestafftracker.listeners.PlayerLogListener;
-import me.joehosten.illusivestafftracker.listeners.PlayerSaveTask;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -30,6 +29,8 @@ public final class IllusiveStaffTracker extends BasePlugin {
     private static IllusiveStaffTracker instance;
     @Getter
     public HashMap<UUID, Long> map = new HashMap<>();
+    @Getter
+    public HashMap<UUID, Long> afkMap = new HashMap<>();
     @Getter
     @Setter
     private TextChannel textChannel;
@@ -48,21 +49,17 @@ public final class IllusiveStaffTracker extends BasePlugin {
         connect(config.getString("database.host"), config.getInt("database.port"), config.getString("database.database"), config.getString("database.username"), config.getString("database.password"));
 
         new Bot();
-        registerListeners(new PlayerLogListener(this, db));
+        registerListeners(new PlayerLogListener(this, db), new PlayerAfkChangeListener(this));
 
 
-        new DateCheckRunnable(this).runTaskTimerAsynchronously(this, 0L, 3600L * 20L);
-        new PlayerSaveTask().runTaskTimerAsynchronously(this, 0L, 120L * 20L);
-        new DailySummaryTask().runTaskTimerAsynchronously(this, 0L, 86400L * 20L);
+        new DateCheckRunnable().runTaskTimerAsynchronously(this, 0L, 3600L * 20L);
 
     }
 
     @Override
     public void onDisable() {
         new PlayerLogListener(this, db).saveAllPlayers();
-        new DateCheckRunnable(this).cancel();
-        new PlayerSaveTask().cancel();
-        new DailySummaryTask().cancel();
+        new DateCheckRunnable().cancel();
         Bot.getBot().getJda().shutdown();
         try {
             db.close();
@@ -77,6 +74,7 @@ public final class IllusiveStaffTracker extends BasePlugin {
         MariaTableBuilder playtimeTable = builder.withTable("staff-time-tracking");
         playtimeTable.withColumn("uuid", SQLColumnType.VARCHAR, 64).setPrimary(true).build();
         playtimeTable.withColumn("time", SQLColumnType.LONG, 64).build();
+        playtimeTable.withColumn("afkTime", SQLColumnType.LONG, 64).build();
 
         this.db = null;
         try {

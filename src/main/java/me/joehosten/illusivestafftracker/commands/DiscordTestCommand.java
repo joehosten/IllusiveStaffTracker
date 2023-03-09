@@ -1,6 +1,8 @@
-package me.joehosten.illusivestafftracker.listeners;
+package me.joehosten.illusivestafftracker.commands;
 
 import games.negative.framework.db.SQLDatabase;
+import games.negative.framework.discord.command.SlashCommand;
+import games.negative.framework.discord.command.SlashInfo;
 import me.joehosten.illusivestafftracker.Bot;
 import me.joehosten.illusivestafftracker.IllusiveStaffTracker;
 import me.joehosten.illusivestafftracker.core.util.DbUtils;
@@ -8,25 +10,23 @@ import me.joehosten.illusivestafftracker.core.util.DiscordSrvUtils;
 import me.joehosten.illusivestafftracker.core.util.TimeUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import org.bukkit.scheduler.BukkitRunnable;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class DateCheckRunnable extends BukkitRunnable {
-    private final List<String> toSend = new ArrayList<>();
-
+@SlashInfo(name = "test", description = "test")
+public class DiscordTestCommand extends SlashCommand {
     @Override
-    public void run() {
+    public void onCommand(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+        if (!slashCommandInteractionEvent.getUser().getId().equals("462296411141177364")) return;
         LocalDateTime now = LocalDateTime.now();
 
-        if (now.getDayOfWeek() == DayOfWeek.SUNDAY && now.getHour() == 11) {
             // discord stuff
             StringBuilder toSend = new StringBuilder();
             ArrayList<String> missedQuota = new ArrayList<>();
@@ -43,7 +43,7 @@ public class DateCheckRunnable extends BukkitRunnable {
             EmbedBuilder eb = new EmbedBuilder();
             eb.setTitle("Weekly Summary");
             eb.setDescription(toSend);
-            TextChannel tc = Bot.getBot().getJda().getTextChannelById("1014041763037581342");
+            TextChannel tc = Bot.getBot().getJda().getTextChannelById("1083078866505060363");
             Objects.requireNonNull(tc).sendMessageEmbeds(eb.build()).queue();
 
             // clear the config
@@ -58,8 +58,7 @@ public class DateCheckRunnable extends BukkitRunnable {
                 throw new RuntimeException(e);
             }
 
-            new PlayerLogListener(IllusiveStaffTracker.getInstance(), db).saveAllPlayers();
-        }
-    }
+            IllusiveStaffTracker.getInstance().saveConfig();
 
+    }
 }

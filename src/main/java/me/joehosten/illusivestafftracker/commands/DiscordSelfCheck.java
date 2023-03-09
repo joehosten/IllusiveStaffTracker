@@ -6,37 +6,25 @@ import me.joehosten.illusivestafftracker.core.util.DbUtils;
 import me.joehosten.illusivestafftracker.core.util.DiscordSrvUtils;
 import me.joehosten.illusivestafftracker.core.util.TimeUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.Objects;
 import java.util.UUID;
 
-@SlashInfo(name = "staffcheck", description = "Check a player's staff time")
-public class DiscordCommandCheck extends SlashCommand {
-    public DiscordCommandCheck() {
-        setData(k -> {
-            k.addOption(OptionType.USER, "user", "Please select the user", true);
-            k.setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR));
-        });
-    }
-
+@SlashInfo(name = "selftimecheck", description = "Check your playtime for the week")
+public class DiscordSelfCheck extends SlashCommand {
     @Override
     public void onCommand(SlashCommandInteractionEvent slashCommandInteractionEvent) {
-        User user = Objects.requireNonNull(slashCommandInteractionEvent.getOption("user")).getAsUser();
+        User user = slashCommandInteractionEvent.getUser();
         UUID uuid = DiscordSrvUtils.getPlayer(user.getId()).getUniqueId();
         long rawPlayTime = Long.parseLong(DbUtils.getCurrentTime(uuid.toString())) - Long.parseLong(DbUtils.getAfkTime(uuid.toString()));
         String playTime = TimeUtil.format(rawPlayTime, 0);
-        String afkTime = TimeUtil.format(Long.parseLong(DbUtils.getAfkTime(uuid.toString())), 0);
 
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle(user.getName() + "'s playtime this week");
-        eb.setDescription(user.getAsMention() + " has actively played for **%active%**. They have been AFK for **%afk%**.".replaceAll("%active%", playTime).replaceAll("%afk%", afkTime));
+        eb.setTitle("Your playtime this week");
+        eb.setDescription("You has actively played for **%active%**. \n\nYou need **%hours%** more hours to meet the requirement.".replaceAll("%active%", playTime).replaceAll("%hours%", TimeUtil.format(DiscordSrvUtils.calculateMissedQuota(uuid.toString()), 0).replaceAll("-", "")));
         eb.setThumbnail("https://crafatar.com/avatars/" + DiscordSrvUtils.getPlayer(user.getId()).getUniqueId() + "?overlay=1");
         slashCommandInteractionEvent.replyEmbeds(eb.build()).setEphemeral(true).queue();
-
     }
 }

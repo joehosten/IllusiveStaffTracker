@@ -106,6 +106,10 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>essentials-releases</id>
+            <url>https://repo.essentialsx.net/releases/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -172,6 +176,11 @@
             <artifactId>mariadb-java-client</artifactId>
             <version>3.1.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>net.essentialsx</groupId>
+            <artifactId>EssentialsX</artifactId>
+            <version>2.19.5</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
