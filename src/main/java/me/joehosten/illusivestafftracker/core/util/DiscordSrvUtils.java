@@ -12,12 +12,11 @@ import java.util.UUID;
 @UtilityClass
 public class DiscordSrvUtils {
     public User getUser(UUID uuid) {
-        System.out.println(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(uuid));
-        return Bot.getBot().getJda().getUserById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(uuid));
+        return Bot.getBot().getJda().getUserById(DbUtils.getDiscordId(uuid.toString()));
     }
 
     public OfflinePlayer getPlayer(String id) {
-        return Bukkit.getOfflinePlayer(DiscordSRV.getPlugin().getAccountLinkManager().getUuid(id));
+        return Bukkit.getOfflinePlayer(DbUtils.getMinecraftId(id));
     }
 
     public long calculateMissedQuota(String uuid) {

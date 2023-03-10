@@ -32,13 +32,13 @@ public class DateCheckRunnable extends BukkitRunnable {
             ArrayList<String> missedQuota = new ArrayList<>();
             for (String uuid : DbUtils.getAllUuids()) {
                 long rawPlayTime = Long.parseLong(DbUtils.getCurrentTime(uuid)) - Long.parseLong(DbUtils.getAfkTime(uuid));
-                String playTime = TimeUtil.format(rawPlayTime, 0);
-                String afkTime = TimeUtil.format(Long.parseLong(DbUtils.getAfkTime(uuid)), 0);
-                toSend.append("- **").append(DiscordSrvUtils.getUser(UUID.fromString(uuid)).getAsMention()).append("** has actively played for **").append(playTime).append("** this week and AFK'd for **%afk%**.".replace("%afk%", afkTime)).append("\n");
+                String playTime = TimeUtil.format(rawPlayTime, 0, true);
+                String afkTime = TimeUtil.format(Long.parseLong(DbUtils.getAfkTime(uuid)), 0, true);
+                toSend.append("- **").append(DiscordSrvUtils.getUser(UUID.fromString(uuid)).getAsMention()).append("** has actively played for **").append(playTime).append(afkTime.length() == 0 ? "** this week." : "** this week and AFK'd for **%afk%**.".replace("%afk%", afkTime)).append("\n");
                 if (DiscordSrvUtils.calculateMissedQuota(uuid) != 0) missedQuota.add(uuid);
             }
-            toSend.append("\n").append("Staff need to meet **six hours** of playtime before they receive a strike. \n\nBelow are the members that did not meet this requirement this week.\n\n");
-            missedQuota.forEach(k -> toSend.append(DiscordSrvUtils.getUser(UUID.fromString(k)).getAsMention()).append(" - Missed quota by: **").append(TimeUtil.format(DiscordSrvUtils.calculateMissedQuota(k), 0).replaceAll("-", "")).append("**\n"));
+            toSend.append("\n").append("Staff need to meet **six hours** of playtime before they receive a strike. \n\nBelow are the members that have not met this requirement.\n\n");
+            missedQuota.forEach(k -> toSend.append(DiscordSrvUtils.getUser(UUID.fromString(k)).getAsMention()).append(" - Missed quota by: **%missed%** \n".replaceAll("%missed%", TimeUtil.format(DiscordSrvUtils.calculateMissedQuota(k), 0).replaceAll("-", ""))));
 
             EmbedBuilder eb = new EmbedBuilder();
             eb.setTitle("Weekly Summary");

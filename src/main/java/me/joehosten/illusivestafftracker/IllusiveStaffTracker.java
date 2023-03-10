@@ -79,6 +79,10 @@ public final class IllusiveStaffTracker extends BasePlugin {
         playtimeTable.withColumn("time", SQLColumnType.LONG, 64).build();
         playtimeTable.withColumn("afkTime", SQLColumnType.LONG, 64).build();
 
+        MariaTableBuilder staffLinkTable = builder.withTable("staff-link");
+        staffLinkTable.withColumn("uuid", SQLColumnType.VARCHAR, 64);
+        staffLinkTable.withColumn("discordId", SQLColumnType.VARCHAR, 64);
+
         this.db = null;
         try {
             db = builder.complete();
