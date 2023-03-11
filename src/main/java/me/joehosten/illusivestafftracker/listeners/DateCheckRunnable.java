@@ -26,7 +26,7 @@ public class DateCheckRunnable extends BukkitRunnable {
     public void run() {
         LocalDateTime now = LocalDateTime.now();
 
-        if (now.getDayOfWeek() == DayOfWeek.SUNDAY && now.getHour() == 11) {
+        if (now.getDayOfWeek() == DayOfWeek.SUNDAY && now.getHour() == 23) {
             // discord stuff
             StringBuilder toSend = new StringBuilder();
             ArrayList<String> missedQuota = new ArrayList<>();

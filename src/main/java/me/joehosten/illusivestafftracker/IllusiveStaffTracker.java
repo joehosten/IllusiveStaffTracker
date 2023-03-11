@@ -53,8 +53,8 @@ public final class IllusiveStaffTracker extends BasePlugin {
         registerListeners(new PlayerLogListener(this, db), new PlayerAfkChangeListener(this));
 
 
-        new DateCheckRunnable().runTaskTimerAsynchronously(this, 0L, 3600L * 20L);
-        new DailySummaryRunnable().runTaskTimerAsynchronously(this, 0L, 86400L * 20L);
+        new DateCheckRunnable().runTaskTimerAsynchronously(this, 0L, 60L * 20L);
+        new DailySummaryRunnable().runTaskTimerAsynchronously(this, 0L, 60 * 20L);
 
     }
 
