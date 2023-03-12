@@ -33,6 +33,7 @@ public class PlayerAfkChangeListener implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
+                    if (!p.isOnline()) return;
                     map.put(p.getUniqueId(), System.currentTimeMillis());
                     System.out.println("10min");
                 }
@@ -47,7 +48,7 @@ public class PlayerAfkChangeListener implements Listener {
 
     }
 
-    private void putIntoData(String uuid, long time) {
+    public void putIntoData(String uuid, long time) {
         SQLDatabase db = IllusiveStaffTracker.getInstance().getDb();
         long afkOutTime = System.currentTimeMillis();
         try {
@@ -63,14 +64,5 @@ public class PlayerAfkChangeListener implements Listener {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private BukkitRunnable runnable(Player player) {
-        return new BukkitRunnable() {
-            @Override
-            public void run() {
-
-            }
-        };
     }
 }
