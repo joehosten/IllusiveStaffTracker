@@ -23,7 +23,7 @@ public class DailySummaryRunnable extends BukkitRunnable {
     public void run() {
         LocalDateTime now = LocalDateTime.now();
 
-        if (now.getHour() == 23) {
+        if (now.getHour() == 23 && now.getMinute() == 1) {
             // discord stuff
             StringBuilder toSend = new StringBuilder();
             ArrayList<String> missedQuota = new ArrayList<>();
