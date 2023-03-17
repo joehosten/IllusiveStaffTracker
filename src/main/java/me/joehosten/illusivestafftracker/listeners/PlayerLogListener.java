@@ -45,9 +45,9 @@ public class PlayerLogListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        new PlayerAfkChangeListener(IllusiveStaffTracker.getInstance()).putIntoData(p.getUniqueId().toString(), IllusiveStaffTracker.getInstance().getAfkMap().get(p.getUniqueId()));
-        IllusiveStaffTracker.getInstance().getAfkMap().remove(p.getUniqueId());
         if (!p.hasPermission("illusive.staff")) return;
+        new PlayerAfkChangeListener(IllusiveStaffTracker.getInstance()).putIntoData(p.getUniqueId().toString(),IllusiveStaffTracker.getInstance().getAfkMap().containsKey(p.getUniqueId()) ?  IllusiveStaffTracker.getInstance().getAfkMap().get(p.getUniqueId()) : 0);
+        IllusiveStaffTracker.getInstance().getAfkMap().remove(p.getUniqueId());
         clockOut(p, false);
     }
 
@@ -106,7 +106,7 @@ public class PlayerLogListener implements Listener {
         LocalDate ld = LocalDate.now();
         User mention = DiscordSrvUtils.getUser(p.getUniqueId());
         String reason = !afk ? "" : " due to being AFK.";
-        eb.setDescription(mention.getAsMention() + " clocked out at " + TimeUtil.timeNow() + reason + "\n\nThey currently have** " + TimeUtil.format(Long.parseLong(DbUtils.getCurrentTime(p.getUniqueId().toString())), 0)+ " **time online.");
+        eb.setDescription(mention.getAsMention() + " clocked out at " + TimeUtil.timeNow() + reason + "\n\nThey currently have** " + TimeUtil.format(Long.parseLong(DbUtils.getCurrentTime(p.getUniqueId().toString())), 0) + " **time online.");
         TextChannel tc = Bot.getBot().getJda().getTextChannelById("1083078866505060363");
         Objects.requireNonNull(tc).sendMessageEmbeds(eb.build()).queue();
     }
