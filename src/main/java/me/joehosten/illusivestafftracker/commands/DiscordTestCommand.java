@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
@@ -23,10 +22,9 @@ public class DiscordTestCommand extends SlashCommand {
         StringBuilder toSend = new StringBuilder();
         ArrayList<String> missedQuota = new ArrayList<>();
         for (String uuid : DbUtils.getAllUuids()) {
-            long rawPlayTime = Long.parseLong(DbUtils.getCurrentTime(uuid)) - Long.parseLong(DbUtils.getAfkTime(uuid));
+            long rawPlayTime = Long.parseLong(DbUtils.getCurrentTime(uuid));
             String playTime = TimeUtil.format(rawPlayTime, 0, true);
-            String afkTime = TimeUtil.format(Long.parseLong(DbUtils.getAfkTime(uuid)), 0, true);
-            toSend.append("- **").append(DiscordSrvUtils.getUser(UUID.fromString(uuid)).getAsMention()).append("** has actively played for **").append(playTime).append(afkTime.length() == 0 ? "** so far this week." : "** so far this week and AFK'd for **%afk%**.".replace("%afk%", afkTime)).append("\n");
+            toSend.append("- **").append(DiscordSrvUtils.getUser(UUID.fromString(uuid)).getAsMention()).append("** has actively played for **").append(playTime).append("\n");
             if (DiscordSrvUtils.calculateMissedQuota(uuid) != 0) missedQuota.add(uuid);
         }
         toSend.append("\n").append("Staff need to meet **six hours** of playtime before they receive a strike. \n\nBelow are the members that have not met this requirement yet.\n\n");
@@ -35,7 +33,7 @@ public class DiscordTestCommand extends SlashCommand {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Daily Summary");
         eb.setDescription(toSend);
-        TextChannel tc = Bot.getBot().getJda().getTextChannelById("1014041763037581342");
+        TextChannel tc = Bot.getBot().getJda().getTextChannelById("1087875275343278080");
         Objects.requireNonNull(tc).sendMessageEmbeds(eb.build()).queue();
     }
 }

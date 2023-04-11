@@ -44,21 +44,6 @@ public class DbUtils {
         return "0";
     }
 
-    public String getAfkTime(String uuid) {
-        SQLDatabase db = IllusiveStaffTracker.getInstance().getDb();
-
-        try {
-            PreparedStatement ps = db.statement("SELECT `afkTime` FROM `staff-time-tracking` WHERE `uuid` = ?");
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            ps.closeOnCompletion();
-            if (rs.next()) return rs.getString("afkTime");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return "0";
-    }
-
     @SneakyThrows
     public ArrayList<String> getAllUuids() {
         SQLDatabase db = IllusiveStaffTracker.getInstance().getDb();
@@ -84,7 +69,7 @@ public class DbUtils {
             PreparedStatement ps = db.statement("SELECT `discordId` FROM `staff-link` WHERE `uuid` = ?");
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()) return rs.getString("discordId");
+            if (rs.next()) return rs.getString("discordId");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -98,7 +83,7 @@ public class DbUtils {
             PreparedStatement ps = db.statement("SELECT `uuid` FROM `staff-link` WHERE `discordId` = ?");
             ps.setString(1, discordId);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()) return rs.getString("uuid");
+            if (rs.next()) return rs.getString("uuid");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

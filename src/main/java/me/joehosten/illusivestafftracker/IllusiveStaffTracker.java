@@ -14,13 +14,17 @@ import lombok.SneakyThrows;
 import me.joehosten.illusivestafftracker.core.util.ConfigUtils;
 import me.joehosten.illusivestafftracker.listeners.DailySummaryRunnable;
 import me.joehosten.illusivestafftracker.listeners.DateCheckRunnable;
-import me.joehosten.illusivestafftracker.listeners.PlayerAfkChangeListener;
 import me.joehosten.illusivestafftracker.listeners.PlayerLogListener;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Timer;
 import java.util.UUID;
 
 public final class IllusiveStaffTracker extends BasePlugin {
@@ -50,10 +54,12 @@ public final class IllusiveStaffTracker extends BasePlugin {
         connect(config.getString("database.host"), config.getInt("database.port"), config.getString("database.database"), config.getString("database.username"), config.getString("database.password"));
 
         new Bot();
-        registerListeners(new PlayerLogListener(this, db), new PlayerAfkChangeListener(this));
+        registerListeners(new PlayerLogListener(this, db));
 
 
-        new DateCheckRunnable().runTaskTimerAsynchronously(this, 0L, 60L * 20L);
+        Timer timer = new Timer();
+
+        timer.schedule(new DateCheckRunnable(), getSummaryTime());
         new DailySummaryRunnable().runTaskTimerAsynchronously(this, 0L, 60 * 20L);
 
     }
@@ -96,5 +102,8 @@ public final class IllusiveStaffTracker extends BasePlugin {
 
     }
 
-
+    private Date getSummaryTime() throws ParseException {
+        DateFormat dateFormatter = new SimpleDateFormat("F HH:mm:ss");
+        return dateFormatter.parse("7 23:00:00");
+    }
 }

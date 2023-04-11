@@ -46,7 +46,6 @@ public class PlayerLogListener implements Listener {
     public void onPlayerLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         if (!p.hasPermission("illusive.staff")) return;
-        new PlayerAfkChangeListener(IllusiveStaffTracker.getInstance()).putIntoData(p.getUniqueId().toString(),IllusiveStaffTracker.getInstance().getAfkMap().containsKey(p.getUniqueId()) ?  IllusiveStaffTracker.getInstance().getAfkMap().get(p.getUniqueId()) : 0);
         IllusiveStaffTracker.getInstance().getAfkMap().remove(p.getUniqueId());
         clockOut(p, false);
     }

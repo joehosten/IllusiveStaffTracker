@@ -28,13 +28,12 @@ public class DiscordCommandCheck extends SlashCommand {
     public void onCommand(SlashCommandInteractionEvent slashCommandInteractionEvent) {
         User user = Objects.requireNonNull(slashCommandInteractionEvent.getOption("user")).getAsUser();
         UUID uuid = DiscordSrvUtils.getPlayer(user.getId()).getUniqueId();
-        long rawPlayTime = Long.parseLong(DbUtils.getCurrentTime(uuid.toString())) - Long.parseLong(DbUtils.getAfkTime(uuid.toString()));
+        long rawPlayTime = Long.parseLong(DbUtils.getCurrentTime(uuid.toString()));
         String playTime = TimeUtil.format(rawPlayTime, 0);
-        String afkTime = TimeUtil.format(Long.parseLong(DbUtils.getAfkTime(uuid.toString())), 0);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle(user.getName() + "'s playtime this week");
-        eb.setDescription(user.getAsMention() + " has actively played for **%active%**. They have been AFK for **%afk%**.".replaceAll("%active%", playTime).replaceAll("%afk%", afkTime));
+        eb.setDescription(user.getAsMention() + " has actively played for **%active%**.".replaceAll("%active%", playTime));
         eb.setThumbnail("https://crafatar.com/avatars/" + DiscordSrvUtils.getPlayer(user.getId()).getUniqueId() + "?overlay=1");
         slashCommandInteractionEvent.replyEmbeds(eb.build()).setEphemeral(true).queue();
 

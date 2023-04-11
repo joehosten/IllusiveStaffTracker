@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @SlashInfo(name = "selftimecheck", description = "Check your playtime for the week")
@@ -18,7 +17,7 @@ public class DiscordSelfCheck extends SlashCommand {
     public void onCommand(SlashCommandInteractionEvent slashCommandInteractionEvent) {
         User user = slashCommandInteractionEvent.getUser();
         UUID uuid = DiscordSrvUtils.getPlayer(user.getId()).getUniqueId();
-        long rawPlayTime = Long.parseLong(DbUtils.getCurrentTime(uuid.toString())) - Long.parseLong(DbUtils.getAfkTime(uuid.toString()));
+        long rawPlayTime = Long.parseLong(DbUtils.getCurrentTime(uuid.toString()));
         String playTime = TimeUtil.format(rawPlayTime, 0);
 
         EmbedBuilder eb = new EmbedBuilder();

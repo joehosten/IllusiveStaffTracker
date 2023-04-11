@@ -8,19 +8,17 @@ import me.joehosten.illusivestafftracker.core.util.DiscordSrvUtils;
 import me.joehosten.illusivestafftracker.core.util.TimeUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+import java.util.TimerTask;
 import java.util.UUID;
 
-public class DateCheckRunnable extends BukkitRunnable {
-    private final List<String> toSend = new ArrayList<>();
+public class DateCheckRunnable extends TimerTask {
 
     @Override
     public void run() {
@@ -31,10 +29,9 @@ public class DateCheckRunnable extends BukkitRunnable {
             StringBuilder toSend = new StringBuilder();
             ArrayList<String> missedQuota = new ArrayList<>();
             for (String uuid : DbUtils.getAllUuids()) {
-                long rawPlayTime = Long.parseLong(DbUtils.getCurrentTime(uuid)) - Long.parseLong(DbUtils.getAfkTime(uuid));
+                long rawPlayTime = Long.parseLong(DbUtils.getCurrentTime(uuid));
                 String playTime = TimeUtil.format(rawPlayTime, 0, true);
-                String afkTime = TimeUtil.format(Long.parseLong(DbUtils.getAfkTime(uuid)), 0, true);
-                toSend.append("- **").append(DiscordSrvUtils.getUser(UUID.fromString(uuid)).getAsMention()).append("** has actively played for **").append(playTime).append(afkTime.length() == 0 ? "** this week." : "** this week and AFK'd for **%afk%**.".replace("%afk%", afkTime)).append("\n");
+                toSend.append("- ").append(DiscordSrvUtils.getUser(UUID.fromString(uuid)).getAsMention()).append(" has actively played for **").append(playTime).append("**\n");
                 if (DiscordSrvUtils.calculateMissedQuota(uuid) != 0) missedQuota.add(uuid);
             }
             toSend.append("\n").append("Staff need to meet **six hours** of playtime before they receive a strike. \n\nBelow are the members that have not met this requirement.\n\n");
@@ -43,7 +40,7 @@ public class DateCheckRunnable extends BukkitRunnable {
             EmbedBuilder eb = new EmbedBuilder();
             eb.setTitle("Weekly Summary");
             eb.setDescription(toSend);
-            TextChannel tc = Bot.getBot().getJda().getTextChannelById("1014041763037581342");
+            TextChannel tc = Bot.getBot().getJda().getTextChannelById("1087875275343278080");
             Objects.requireNonNull(tc).sendMessageEmbeds(eb.build()).queue();
 
             // clear the config
